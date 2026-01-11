@@ -66,7 +66,10 @@ export function createCookieGame(): GameEngine {
     description: 'Cursors are twice as efficient',
     costs: [{ resourceId: 'cookies', amount: 100 }],
     effect: () => {
-      cursor.costs[0].scalingFactor! *= 0.95
+      const cost = cursor.costs[0]
+      if (cost && cost.scalingFactor) {
+        cost.scalingFactor *= 0.95
+      }
     },
     isVisible: () => cursor.purchased >= 1
   })
@@ -79,7 +82,10 @@ export function createCookieGame(): GameEngine {
     effect: () => {
       // This would double grandma production in a real implementation
       // For now, it's just a cost reduction
-      grandma.costs[0].scalingFactor! *= 0.95
+      const cost = grandma.costs[0]
+      if (cost && cost.scalingFactor) {
+        cost.scalingFactor *= 0.95
+      }
     },
     isVisible: () => grandma.purchased >= 1
   })
