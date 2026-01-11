@@ -122,20 +122,26 @@ export class Generator {
   }
 
   getMaxAffordable(resources: Map<string, Resource>): number {
-    let affordable = 0
     const maxCheck = this.maxPurchases !== null 
       ? this.maxPurchases - this.purchased 
-      : 1000 // Reasonable limit for calculation
+      : 1000
 
-    for (let i = 1; i <= maxCheck; i++) {
-      if (this.canPurchase(resources, i)) {
-        affordable = i
+    // Binary search for maximum affordable quantity
+    let left = 0
+    let right = maxCheck
+    let result = 0
+    
+    while (left <= right) {
+      const mid = Math.floor((left + right) / 2)
+      if (this.canPurchase(resources, mid)) {
+        result = mid
+        left = mid + 1
       } else {
-        break
+        right = mid - 1
       }
     }
     
-    return affordable
+    return result
   }
 
   getCurrentProduction(): number {
@@ -154,11 +160,14 @@ export class Generator {
   toJSON() {
     return {
       id: this.id,
-      purchased: this.purchased
+      purchased: this.purchased,
+      multipliers: this.productionMultipliers.map(m => m.toJSON())
     }
   }
 
-  fromJSON(data: { purchased: number }): void {
+  fromJSON(data: { purchased: number; multipliers?: any[] }): void {
     this.purchased = data.purchased
+    // Note: Multipliers are re-applied by upgrade effects during load
+    // so we don't restore them directly here
   }
 }

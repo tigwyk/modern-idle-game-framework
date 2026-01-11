@@ -1,3 +1,14 @@
+export interface SerializedStatistics {
+  totalResourcesEarned: Array<[string, number]>
+  totalResourcesSpent: Array<[string, number]>
+  totalGeneratorsPurchased: Array<[string, number]>
+  totalUpgradesPurchased: Array<[string, number]>
+  achievementsUnlocked: number
+  totalClicks: number
+  timePlayed: number
+  sessionStartTime: number
+}
+
 export interface Statistics {
   totalResourcesEarned: Map<string, number>
   totalResourcesSpent: Map<string, number>
@@ -106,7 +117,7 @@ export class StatisticsTracker {
     }
   }
 
-  fromJSON(data: any): void {
+  fromJSON(data: SerializedStatistics): void {
     if (data.totalResourcesEarned) {
       this.stats.totalResourcesEarned = new Map(data.totalResourcesEarned)
     }
