@@ -7,8 +7,13 @@ defineProps<{
 </script>
 
 <template>
-  <div class="achievement-card" :class="{ unlocked: achievement.unlocked }">
-    <div class="achievement-icon">
+  <div 
+    class="achievement-card" 
+    :class="{ unlocked: achievement.unlocked }"
+    role="listitem"
+    :aria-label="`${achievement.unlocked ? 'Unlocked' : 'Locked'} achievement: ${achievement.isSecret && !achievement.unlocked ? 'Secret Achievement' : achievement.name}`"
+  >
+    <div class="achievement-icon" aria-hidden="true">
       <span v-if="achievement.unlocked">🏆</span>
       <span v-else-if="achievement.isSecret">❓</span>
       <span v-else>🔒</span>

@@ -45,14 +45,14 @@ function handleManualClick() {
             :key="resource.id"
             :resource="resource"
           />
-          <button @click="handleManualClick" class="click-button">
+          <button @click="handleManualClick" class="click-button" aria-label="Click to bake one cookie">
             🍪 Bake Cookie
           </button>
         </section>
 
         <section class="achievements-section">
           <h2>Achievements ({{ gameStore.unlockedAchievements.length }}/{{ gameStore.achievements.length }})</h2>
-          <div class="achievements-list">
+          <div class="achievements-list" role="list" aria-label="Achievements">
             <AchievementCard
               v-for="achievement in gameStore.achievements"
               :key="achievement.id"
@@ -70,7 +70,7 @@ function handleManualClick() {
             :key="generator.id"
             :generator="generator"
             :resources="gameStore.resources"
-            @purchase="gameStore.purchaseGenerator"
+            @purchase="(id, qty) => gameStore.purchaseGenerator(id, qty)"
           />
         </section>
 
@@ -91,8 +91,8 @@ function handleManualClick() {
     </div>
 
     <footer>
-      <button @click="gameStore.saveGame()" class="action-button">💾 Save Game</button>
-      <button @click="gameStore.resetGame()" class="action-button danger">🔄 Reset Game</button>
+      <button @click="gameStore.saveGame()" class="action-button" aria-label="Save game progress">💾 Save Game</button>
+      <button @click="gameStore.resetGame()" class="action-button danger" aria-label="Reset game (warning: this will delete all progress)">🔄 Reset Game</button>
     </footer>
   </div>
 </template>

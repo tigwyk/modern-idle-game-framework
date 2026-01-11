@@ -51,7 +51,7 @@ export const useGameStore = defineStore('game', () => {
     engine.value?.reset()
   }
 
-  function purchaseGenerator(generatorId: string): boolean {
+  function purchaseGenerator(generatorId: string, quantity: number = 1): boolean {
     if (!engine.value) return false
     
     const generator = engine.value.getGenerator(generatorId)
@@ -61,7 +61,7 @@ export const useGameStore = defineStore('game', () => {
       engine.value.getAllResources().map(r => [r.id, r])
     )
 
-    return generator.purchase(resourceMap)
+    return generator.purchase(resourceMap, quantity)
   }
 
   function purchaseUpgrade(upgradeId: string): boolean {
