@@ -19,7 +19,7 @@ const formatTime = (seconds: number): string => {
   const hours = Math.floor(seconds / 3600)
   const minutes = Math.floor((seconds % 3600) / 60)
   const secs = Math.floor(seconds % 60)
-  
+
   if (hours > 0) {
     return `${hours}h ${minutes}m ${secs}s`
   } else if (minutes > 0) {
@@ -28,13 +28,9 @@ const formatTime = (seconds: number): string => {
   return `${secs}s`
 }
 
-const totalGenerators = computed(() => 
-  props.statistics.getTotalGeneratorsPurchased()
-)
+const totalGenerators = computed(() => props.statistics.getTotalGeneratorsPurchased())
 
-const totalUpgrades = computed(() => 
-  props.statistics.getTotalUpgradesPurchased()
-)
+const totalUpgrades = computed(() => props.statistics.getTotalUpgradesPurchased())
 </script>
 
 <template>

@@ -15,7 +15,7 @@ export class GameEngine {
   private upgrades: Map<string, Upgrade> = new Map()
   private achievements: Map<string, Achievement> = new Map()
   public statistics: StatisticsTracker
-  
+
   private tickRate: number
   private autoSaveInterval: number
   private lastTick: number = Date.now()
@@ -88,7 +88,7 @@ export class GameEngine {
 
     this.lastTick = Date.now()
     this.lastSave = Date.now()
-    
+
     this.tickInterval = window.setInterval(() => {
       this.tick()
     }, this.tickRate)
@@ -134,14 +134,14 @@ export class GameEngine {
   // Save/Load
   save(): void {
     this.statistics.updateTimePlayed()
-    
+
     const saveData = {
       resources: Array.from(this.resources.values()).map(r => r.toJSON()),
       generators: Array.from(this.generators.values()).map(g => g.toJSON()),
       upgrades: Array.from(this.upgrades.values()).map(u => u.toJSON()),
       achievements: Array.from(this.achievements.values()).map(a => a.toJSON()),
       statistics: this.statistics.toJSON(),
-      timestamp: Date.now()
+      timestamp: Date.now(),
     }
 
     localStorage.setItem('idleGameSave', JSON.stringify(saveData))

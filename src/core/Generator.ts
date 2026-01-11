@@ -36,7 +36,7 @@ export class Generator {
     this.baseProductionRate = config.baseProductionRate
     this.costs = config.costs.map(cost => ({
       ...cost,
-      scalingFactor: cost.scalingFactor ?? 1.15
+      scalingFactor: cost.scalingFactor ?? 1.15,
     }))
     this.maxPurchases = config.maxPurchases || null
     this.purchased = 0
@@ -70,7 +70,7 @@ export class Generator {
 
     // Calculate total cost for bulk purchase
     let totalCost = new Map<string, number>()
-    
+
     for (let i = 0; i < quantity; i++) {
       const costs = this.getCurrentCostsForPurchase(this.purchased + i)
       for (const [resourceId, amount] of costs) {
@@ -97,14 +97,17 @@ export class Generator {
     return costs
   }
 
-  purchase(resources: Map<string, Resource>, quantity: number = 1): { success: boolean; costs: Map<string, number> } {
+  purchase(
+    resources: Map<string, Resource>,
+    quantity: number = 1
+  ): { success: boolean; costs: Map<string, number> } {
     if (!this.canPurchase(resources, quantity)) {
       return { success: false, costs: new Map() }
     }
 
     // Calculate and deduct total cost
     let totalCost = new Map<string, number>()
-    
+
     for (let i = 0; i < quantity; i++) {
       const costs = this.getCurrentCostsForPurchase(this.purchased + i)
       for (const [resourceId, amount] of costs) {
@@ -122,15 +125,13 @@ export class Generator {
   }
 
   getMaxAffordable(resources: Map<string, Resource>): number {
-    const maxCheck = this.maxPurchases !== null 
-      ? this.maxPurchases - this.purchased 
-      : 1000
+    const maxCheck = this.maxPurchases !== null ? this.maxPurchases - this.purchased : 1000
 
     // Binary search for maximum affordable quantity
     let left = 0
     let right = maxCheck
     let result = 0
-    
+
     while (left <= right) {
       const mid = Math.floor((left + right) / 2)
       if (this.canPurchase(resources, mid)) {
@@ -140,20 +141,20 @@ export class Generator {
         right = mid - 1
       }
     }
-    
+
     return result
   }
 
   getCurrentProduction(): number {
     let production = this.baseProductionRate * this.purchased
-    
+
     // Apply all active multipliers
     for (const multiplier of this.productionMultipliers) {
       if (multiplier.active) {
         production = multiplier.apply(production)
       }
     }
-    
+
     return production
   }
 
@@ -161,7 +162,7 @@ export class Generator {
     return {
       id: this.id,
       purchased: this.purchased,
-      multipliers: this.productionMultipliers.map(m => m.toJSON())
+      multipliers: this.productionMultipliers.map(m => m.toJSON()),
     }
   }
 

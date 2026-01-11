@@ -43,7 +43,7 @@ export class Achievement {
   toJSON() {
     return {
       id: this.id,
-      unlocked: this.unlocked
+      unlocked: this.unlocked,
     }
   }
 

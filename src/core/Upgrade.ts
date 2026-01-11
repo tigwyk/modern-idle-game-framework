@@ -72,7 +72,7 @@ export class Upgrade {
   toJSON() {
     return {
       id: this.id,
-      purchased: this.purchased
+      purchased: this.purchased,
     }
   }
 

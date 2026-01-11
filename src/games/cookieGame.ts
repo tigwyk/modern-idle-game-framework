@@ -3,7 +3,7 @@ import { GameEngine, Resource, Generator, Upgrade, Achievement, Multiplier } fro
 export function createCookieGame(): GameEngine {
   const engine = new GameEngine({
     tickRate: 100,
-    autoSaveInterval: 30000
+    autoSaveInterval: 30000,
   })
 
   // Create resources
@@ -12,7 +12,7 @@ export function createCookieGame(): GameEngine {
     name: 'Cookies',
     description: 'Delicious cookies',
     initialAmount: 0,
-    displayPrecision: 0
+    displayPrecision: 0,
   })
 
   engine.addResource(cookies)
@@ -24,7 +24,7 @@ export function createCookieGame(): GameEngine {
     description: 'Clicks cookies automatically',
     producesResourceId: 'cookies',
     baseProductionRate: 0.1,
-    costs: [{ resourceId: 'cookies', baseAmount: 15, scalingFactor: 1.15 }]
+    costs: [{ resourceId: 'cookies', baseAmount: 15, scalingFactor: 1.15 }],
   })
 
   const grandma = new Generator({
@@ -33,7 +33,7 @@ export function createCookieGame(): GameEngine {
     description: 'A nice grandma who bakes cookies',
     producesResourceId: 'cookies',
     baseProductionRate: 1,
-    costs: [{ resourceId: 'cookies', baseAmount: 100, scalingFactor: 1.15 }]
+    costs: [{ resourceId: 'cookies', baseAmount: 100, scalingFactor: 1.15 }],
   })
 
   const farm = new Generator({
@@ -42,7 +42,7 @@ export function createCookieGame(): GameEngine {
     description: 'Grows cookie ingredients',
     producesResourceId: 'cookies',
     baseProductionRate: 8,
-    costs: [{ resourceId: 'cookies', baseAmount: 1100, scalingFactor: 1.15 }]
+    costs: [{ resourceId: 'cookies', baseAmount: 1100, scalingFactor: 1.15 }],
   })
 
   const factory = new Generator({
@@ -51,7 +51,7 @@ export function createCookieGame(): GameEngine {
     description: 'Mass produces cookies',
     producesResourceId: 'cookies',
     baseProductionRate: 47,
-    costs: [{ resourceId: 'cookies', baseAmount: 12000, scalingFactor: 1.15 }]
+    costs: [{ resourceId: 'cookies', baseAmount: 12000, scalingFactor: 1.15 }],
   })
 
   engine.addGenerator(cursor)
@@ -66,7 +66,7 @@ export function createCookieGame(): GameEngine {
     description: 'Doubles cursor production',
     type: 'multiplicative',
     value: 2,
-    target: 'cursor'
+    target: 'cursor',
   })
 
   const grandmaMultiplier = new Multiplier({
@@ -75,7 +75,7 @@ export function createCookieGame(): GameEngine {
     description: 'Doubles grandma production',
     type: 'multiplicative',
     value: 2,
-    target: 'grandma'
+    target: 'grandma',
   })
 
   // Create upgrades
@@ -87,7 +87,7 @@ export function createCookieGame(): GameEngine {
     effect: () => {
       cursor.addMultiplier(cursorMultiplier)
     },
-    isVisible: () => cursor.purchased >= 1
+    isVisible: () => cursor.purchased >= 1,
   })
 
   const grandmaUpgrade1 = new Upgrade({
@@ -98,7 +98,7 @@ export function createCookieGame(): GameEngine {
     effect: () => {
       grandma.addMultiplier(grandmaMultiplier)
     },
-    isVisible: () => grandma.purchased >= 1
+    isVisible: () => grandma.purchased >= 1,
   })
 
   const clickPower = new Upgrade({
@@ -109,7 +109,7 @@ export function createCookieGame(): GameEngine {
     effect: () => {
       // In a real game, this would affect manual clicks
       // Here it's just demonstrative
-    }
+    },
   })
 
   engine.addUpgrade(cursorUpgrade1)
@@ -121,21 +121,21 @@ export function createCookieGame(): GameEngine {
     id: 'first_cookie',
     name: 'First Cookie',
     description: 'Bake your first cookie',
-    condition: () => cookies.amount >= 1
+    condition: () => cookies.amount >= 1,
   })
 
   const hundredCookies = new Achievement({
     id: 'hundred_cookies',
     name: 'Cookie Hundred',
     description: 'Bake 100 cookies',
-    condition: () => cookies.amount >= 100
+    condition: () => cookies.amount >= 100,
   })
 
   const firstGenerator = new Achievement({
     id: 'first_generator',
     name: 'Getting Help',
     description: 'Purchase your first generator',
-    condition: () => cursor.purchased >= 1 || grandma.purchased >= 1
+    condition: () => cursor.purchased >= 1 || grandma.purchased >= 1,
   })
 
   const tenGenerators = new Achievement({
@@ -145,7 +145,7 @@ export function createCookieGame(): GameEngine {
     condition: () => {
       const total = cursor.purchased + grandma.purchased + farm.purchased + factory.purchased
       return total >= 10
-    }
+    },
   })
 
   const secretAchievement = new Achievement({
@@ -153,7 +153,7 @@ export function createCookieGame(): GameEngine {
     name: 'Secret Baker',
     description: 'Reach 10,000 cookies',
     condition: () => cookies.amount >= 10000,
-    isSecret: true
+    isSecret: true,
   })
 
   engine.addAchievement(firstCookie)

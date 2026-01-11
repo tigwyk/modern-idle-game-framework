@@ -12,13 +12,9 @@ export const useGameStore = defineStore('game', () => {
   const upgrades = computed(() => engine.value?.getAllUpgrades() ?? [])
   const achievements = computed(() => engine.value?.getAllAchievements() ?? [])
 
-  const unlockedAchievements = computed(() => 
-    achievements.value.filter(a => a.unlocked)
-  )
+  const unlockedAchievements = computed(() => achievements.value.filter(a => a.unlocked))
 
-  const visibleUpgrades = computed(() =>
-    upgrades.value.filter(u => u.isVisible())
-  )
+  const visibleUpgrades = computed(() => upgrades.value.filter(u => u.isVisible()))
 
   // Actions
   function initializeGame(gameEngine: GameEngine) {
@@ -53,13 +49,11 @@ export const useGameStore = defineStore('game', () => {
 
   function purchaseGenerator(generatorId: string, quantity: number = 1): boolean {
     if (!engine.value) return false
-    
+
     const generator = engine.value.getGenerator(generatorId)
     if (!generator) return false
 
-    const resourceMap = new Map(
-      engine.value.getAllResources().map(r => [r.id, r])
-    )
+    const resourceMap = new Map(engine.value.getAllResources().map(r => [r.id, r]))
 
     const result = generator.purchase(resourceMap, quantity)
     if (result.success) {
@@ -74,13 +68,11 @@ export const useGameStore = defineStore('game', () => {
 
   function purchaseUpgrade(upgradeId: string): boolean {
     if (!engine.value) return false
-    
+
     const upgrade = engine.value.getUpgrade(upgradeId)
     if (!upgrade) return false
 
-    const resourceMap = new Map(
-      engine.value.getAllResources().map(r => [r.id, r])
-    )
+    const resourceMap = new Map(engine.value.getAllResources().map(r => [r.id, r]))
 
     const result = upgrade.purchase(resourceMap)
     if (result.success) {
@@ -124,6 +116,6 @@ export const useGameStore = defineStore('game', () => {
     purchaseUpgrade,
     getResource,
     getGenerator,
-    getUpgrade
+    getUpgrade,
   }
 })

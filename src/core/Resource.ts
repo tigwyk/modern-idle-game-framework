@@ -53,7 +53,7 @@ export class Resource {
   private formatScientific(value: number): string {
     const suffixes = ['', 'K', 'M', 'B', 'T', 'Qa', 'Qi', 'Sx', 'Sp', 'Oc', 'No', 'Dc']
     const tier = Math.floor(Math.log10(Math.abs(value)) / 3)
-    
+
     if (tier <= 0) return value.toFixed(this.displayPrecision)
     if (tier >= suffixes.length) {
       return value.toExponential(this.displayPrecision)
@@ -69,7 +69,7 @@ export class Resource {
   toJSON() {
     return {
       id: this.id,
-      amount: this.amount
+      amount: this.amount,
     }
   }
 
