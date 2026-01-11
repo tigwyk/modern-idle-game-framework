@@ -7,7 +7,12 @@ defineProps<{
 </script>
 
 <template>
-  <div class="resource-display">
+  <div 
+    class="resource-display" 
+    role="status" 
+    aria-live="polite"
+    :aria-label="`${resource.name}: ${resource.getDisplayAmount()}`"
+  >
     <div class="resource-name">{{ resource.name }}</div>
     <div class="resource-amount">{{ resource.getDisplayAmount() }}</div>
     <div v-if="resource.description" class="resource-description">

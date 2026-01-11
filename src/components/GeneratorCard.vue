@@ -8,7 +8,7 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  purchase: [generatorId: string]
+  purchase: [generatorId: string, quantity: number]
 }>()
 
 const resourceMap = computed(() => 
@@ -16,7 +16,11 @@ const resourceMap = computed(() =>
 )
 
 const canAfford = computed(() => 
-  props.generator.canPurchase(resourceMap.value)
+  props.generator.canPurchase(resourceMap.value, 1)
+)
+
+const maxAffordable = computed(() =>
+  props.generator.getMaxAffordable(resourceMap.value)
 )
 
 const costs = computed(() => {
@@ -35,40 +39,97 @@ const isMaxed = computed(() =>
   props.generator.purchased >= props.generator.maxPurchases
 )
 
-function handlePurchase() {
-  emit('purchase', props.generator.id)
+// Computed ARIA labels
+const ownedAriaLabel = computed(() => 
+  `Owned ${props.generator.purchased} ${props.generator.name}`
+)
+
+const productionAriaLabel = computed(() => 
+  `Producing ${props.generator.getCurrentProduction().toFixed(2)} per second`
+)
+
+const buyOneAriaLabel = computed(() => 
+  `Purchase one ${props.generator.name} for ${costs.value.map(c => c.amount + ' ' + c.resourceName).join(', ')}`
+)
+
+const buyTenAriaLabel = computed(() => 
+  `Purchase 10 ${props.generator.name}s`
+)
+
+const buyHundredAriaLabel = computed(() => 
+  `Purchase 100 ${props.generator.name}s`
+)
+
+const buyMaxAriaLabel = computed(() => 
+  `Purchase maximum ${maxAffordable.value} ${props.generator.name}s`
+)
+
+function handlePurchase(quantity: number = 1) {
+  emit('purchase', props.generator.id, quantity)
 }
 </script>
 
 <template>
   <div class="generator-card" :class="{ disabled: !canAfford || isMaxed }">
     <div class="generator-header">
-      <h3>{{ generator.name }}</h3>
-      <div class="generator-count">Owned: {{ generator.purchased }}</div>
+      <h3 :id="`generator-${generator.id}-name`">{{ generator.name }}</h3>
+      <div class="generator-count" :aria-label="ownedAriaLabel">
+        Owned: {{ generator.purchased }}
+      </div>
     </div>
     
     <p v-if="generator.description" class="generator-description">
       {{ generator.description }}
     </p>
 
-    <div class="generator-production">
+    <div class="generator-production" :aria-label="productionAriaLabel">
       Production: {{ generator.getCurrentProduction().toFixed(2) }}/s
     </div>
 
-    <div class="generator-costs">
+    <div class="generator-costs" role="group" aria-label="Cost">
       <div v-for="cost in costs" :key="cost.resourceName" class="cost-item">
         {{ cost.resourceName }}: {{ cost.amount }}
       </div>
     </div>
 
-    <button 
-      @click="handlePurchase" 
-      :disabled="!canAfford || isMaxed"
-      class="purchase-button"
-    >
-      <span v-if="isMaxed">Maxed</span>
-      <span v-else>Purchase</span>
-    </button>
+    <div class="purchase-buttons" role="group" :aria-labelledby="`generator-${generator.id}-name`">
+      <button 
+        @click="handlePurchase(1)" 
+        :disabled="!canAfford || isMaxed"
+        :aria-label="buyOneAriaLabel"
+        class="purchase-button"
+      >
+        <span v-if="isMaxed">Maxed</span>
+        <span v-else>Buy 1</span>
+      </button>
+      <button 
+        v-if="maxAffordable >= 10"
+        @click="handlePurchase(10)" 
+        :disabled="maxAffordable < 10 || isMaxed"
+        :aria-label="buyTenAriaLabel"
+        class="purchase-button bulk"
+      >
+        Buy 10
+      </button>
+      <button 
+        v-if="maxAffordable >= 100"
+        @click="handlePurchase(100)" 
+        :disabled="maxAffordable < 100 || isMaxed"
+        :aria-label="buyHundredAriaLabel"
+        class="purchase-button bulk"
+      >
+        Buy 100
+      </button>
+      <button 
+        v-if="maxAffordable >= 1"
+        @click="handlePurchase(maxAffordable)" 
+        :disabled="maxAffordable < 1 || isMaxed"
+        :aria-label="buyMaxAriaLabel"
+        class="purchase-button max"
+      >
+        Buy Max ({{ maxAffordable }})
+      </button>
+    </div>
   </div>
 </template>
 
@@ -132,21 +193,44 @@ function handlePurchase() {
   color: #555;
 }
 
+.purchase-buttons {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
 .purchase-button {
-  width: 100%;
+  flex: 1;
+  min-width: 60px;
   padding: 0.75rem;
   background: #42b983;
   color: white;
   border: none;
   border-radius: 4px;
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: bold;
   cursor: pointer;
   transition: background 0.2s;
 }
 
+.purchase-button.bulk {
+  background: #3498db;
+}
+
+.purchase-button.max {
+  background: #9b59b6;
+}
+
 .purchase-button:hover:not(:disabled) {
   background: #359268;
+}
+
+.purchase-button.bulk:hover:not(:disabled) {
+  background: #2980b9;
+}
+
+.purchase-button.max:hover:not(:disabled) {
+  background: #8e44ad;
 }
 
 .purchase-button:disabled {

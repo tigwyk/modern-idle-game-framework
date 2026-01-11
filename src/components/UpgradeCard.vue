@@ -31,6 +31,10 @@ const costs = computed(() => {
 
 const isMaxed = computed(() => props.upgrade.isMaxed())
 
+const purchaseAriaLabel = computed(() => 
+  `Purchase ${props.upgrade.name} upgrade for ${costs.value.map(c => c.amount + ' ' + c.resourceName).join(', ')}`
+)
+
 function handlePurchase() {
   emit('purchase', props.upgrade.id)
 }
@@ -39,7 +43,7 @@ function handlePurchase() {
 <template>
   <div class="upgrade-card" :class="{ disabled: !canAfford || isMaxed }">
     <div class="upgrade-header">
-      <h3>{{ upgrade.name }}</h3>
+      <h3 :id="`upgrade-${upgrade.id}-name`">{{ upgrade.name }}</h3>
       <div v-if="upgrade.maxPurchases > 1" class="upgrade-count">
         {{ upgrade.purchased }}/{{ upgrade.maxPurchases }}
       </div>
@@ -47,7 +51,7 @@ function handlePurchase() {
     
     <p class="upgrade-description">{{ upgrade.description }}</p>
 
-    <div class="upgrade-costs">
+    <div class="upgrade-costs" role="group" aria-label="Cost">
       <div v-for="cost in costs" :key="cost.resourceName" class="cost-item">
         {{ cost.resourceName }}: {{ cost.amount }}
       </div>
@@ -56,6 +60,8 @@ function handlePurchase() {
     <button 
       @click="handlePurchase" 
       :disabled="!canAfford || isMaxed"
+      :aria-labelledby="`upgrade-${upgrade.id}-name`"
+      :aria-label="purchaseAriaLabel"
       class="purchase-button"
     >
       <span v-if="isMaxed">Purchased</span>

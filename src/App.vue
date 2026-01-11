@@ -6,6 +6,7 @@ import ResourceDisplay from './components/ResourceDisplay.vue'
 import GeneratorCard from './components/GeneratorCard.vue'
 import UpgradeCard from './components/UpgradeCard.vue'
 import AchievementCard from './components/AchievementCard.vue'
+import StatisticsPanel from './components/StatisticsPanel.vue'
 
 const gameStore = useGameStore()
 
@@ -25,6 +26,9 @@ function handleManualClick() {
   const cookies = gameStore.getResource('cookies')
   if (cookies) {
     cookies.add(1)
+    // Track the click and resource earned in statistics
+    gameStore.engine?.statistics.recordClick()
+    gameStore.engine?.statistics.recordResourceEarned('cookies', 1)
   }
 }
 </script>
@@ -45,14 +49,14 @@ function handleManualClick() {
             :key="resource.id"
             :resource="resource"
           />
-          <button @click="handleManualClick" class="click-button">
+          <button @click="handleManualClick" class="click-button" aria-label="Click to bake one cookie">
             🍪 Bake Cookie
           </button>
         </section>
 
         <section class="achievements-section">
           <h2>Achievements ({{ gameStore.unlockedAchievements.length }}/{{ gameStore.achievements.length }})</h2>
-          <div class="achievements-list">
+          <div class="achievements-list" role="list" aria-label="Achievements">
             <AchievementCard
               v-for="achievement in gameStore.achievements"
               :key="achievement.id"
@@ -60,6 +64,11 @@ function handleManualClick() {
             />
           </div>
         </section>
+
+        <StatisticsPanel 
+          v-if="gameStore.engine?.statistics"
+          :statistics="gameStore.engine.statistics"
+        />
       </aside>
 
       <main class="main-content">
@@ -70,7 +79,7 @@ function handleManualClick() {
             :key="generator.id"
             :generator="generator"
             :resources="gameStore.resources"
-            @purchase="gameStore.purchaseGenerator"
+            @purchase="(id, qty) => gameStore.purchaseGenerator(id, qty)"
           />
         </section>
 
@@ -91,8 +100,8 @@ function handleManualClick() {
     </div>
 
     <footer>
-      <button @click="gameStore.saveGame()" class="action-button">💾 Save Game</button>
-      <button @click="gameStore.resetGame()" class="action-button danger">🔄 Reset Game</button>
+      <button @click="gameStore.saveGame()" class="action-button" aria-label="Save game progress">💾 Save Game</button>
+      <button @click="gameStore.resetGame()" class="action-button danger" aria-label="Reset game (warning: this will delete all progress)">🔄 Reset Game</button>
     </footer>
   </div>
 </template>

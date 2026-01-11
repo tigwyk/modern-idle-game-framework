@@ -1,4 +1,4 @@
-import { GameEngine, Resource, Generator, Upgrade, Achievement } from '../core'
+import { GameEngine, Resource, Generator, Upgrade, Achievement, Multiplier } from '../core'
 
 export function createCookieGame(): GameEngine {
   const engine = new GameEngine({
@@ -59,6 +59,25 @@ export function createCookieGame(): GameEngine {
   engine.addGenerator(farm)
   engine.addGenerator(factory)
 
+  // Create multipliers for upgrades
+  const cursorMultiplier = new Multiplier({
+    id: 'cursor_multiplier',
+    name: 'Cursor Production Boost',
+    description: 'Doubles cursor production',
+    type: 'multiplicative',
+    value: 2,
+    target: 'cursor'
+  })
+
+  const grandmaMultiplier = new Multiplier({
+    id: 'grandma_multiplier',
+    name: 'Grandma Production Boost',
+    description: 'Doubles grandma production',
+    type: 'multiplicative',
+    value: 2,
+    target: 'grandma'
+  })
+
   // Create upgrades
   const cursorUpgrade1 = new Upgrade({
     id: 'cursor_upgrade_1',
@@ -66,7 +85,7 @@ export function createCookieGame(): GameEngine {
     description: 'Cursors are twice as efficient',
     costs: [{ resourceId: 'cookies', amount: 100 }],
     effect: () => {
-      cursor.costs[0].scalingFactor! *= 0.95
+      cursor.addMultiplier(cursorMultiplier)
     },
     isVisible: () => cursor.purchased >= 1
   })
@@ -77,9 +96,7 @@ export function createCookieGame(): GameEngine {
     description: 'Grandmas are twice as efficient',
     costs: [{ resourceId: 'cookies', amount: 1000 }],
     effect: () => {
-      // This would double grandma production in a real implementation
-      // For now, it's just a cost reduction
-      grandma.costs[0].scalingFactor! *= 0.95
+      grandma.addMultiplier(grandmaMultiplier)
     },
     isVisible: () => grandma.purchased >= 1
   })

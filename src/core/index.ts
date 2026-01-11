@@ -3,3 +3,5 @@ export { Generator, type GeneratorConfig, type GeneratorCost } from './Generator
 export { Upgrade, type UpgradeConfig, type UpgradeCost } from './Upgrade'
 export { Achievement, type AchievementConfig } from './Achievement'
 export { GameEngine, type GameEngineConfig } from './GameEngine'
+export { Multiplier, type MultiplierConfig } from './Multiplier'
+export { StatisticsTracker, type Statistics, type SerializedStatistics } from './Statistics'

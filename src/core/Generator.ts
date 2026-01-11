@@ -1,4 +1,5 @@
 import type { Resource } from './Resource'
+import type { Multiplier } from './Multiplier'
 
 export interface GeneratorCost {
   resourceId: string
@@ -25,6 +26,7 @@ export class Generator {
   public readonly costs: GeneratorCost[]
   public readonly maxPurchases: number | null
   public purchased: number
+  private productionMultipliers: Multiplier[] = []
 
   constructor(config: GeneratorConfig) {
     this.id = config.id
@@ -40,6 +42,18 @@ export class Generator {
     this.purchased = 0
   }
 
+  addMultiplier(multiplier: Multiplier): void {
+    this.productionMultipliers.push(multiplier)
+  }
+
+  removeMultiplier(multiplierId: string): void {
+    this.productionMultipliers = this.productionMultipliers.filter(m => m.id !== multiplierId)
+  }
+
+  getMultipliers(): Multiplier[] {
+    return this.productionMultipliers
+  }
+
   getCurrentCosts(): Map<string, number> {
     const costs = new Map<string, number>()
     for (const cost of this.costs) {
@@ -49,13 +63,23 @@ export class Generator {
     return costs
   }
 
-  canPurchase(resources: Map<string, Resource>): boolean {
-    if (this.maxPurchases !== null && this.purchased >= this.maxPurchases) {
+  canPurchase(resources: Map<string, Resource>, quantity: number = 1): boolean {
+    if (this.maxPurchases !== null && this.purchased + quantity > this.maxPurchases) {
       return false
     }
 
-    const costs = this.getCurrentCosts()
-    for (const [resourceId, amount] of costs) {
+    // Calculate total cost for bulk purchase
+    let totalCost = new Map<string, number>()
+    
+    for (let i = 0; i < quantity; i++) {
+      const costs = this.getCurrentCostsForPurchase(this.purchased + i)
+      for (const [resourceId, amount] of costs) {
+        totalCost.set(resourceId, (totalCost.get(resourceId) || 0) + amount)
+      }
+    }
+
+    // Check if can afford total cost
+    for (const [resourceId, amount] of totalCost) {
       const resource = resources.get(resourceId)
       if (!resource || !resource.canAfford(amount)) {
         return false
@@ -64,33 +88,86 @@ export class Generator {
     return true
   }
 
-  purchase(resources: Map<string, Resource>): boolean {
-    if (!this.canPurchase(resources)) {
-      return false
+  private getCurrentCostsForPurchase(purchaseCount: number): Map<string, number> {
+    const costs = new Map<string, number>()
+    for (const cost of this.costs) {
+      const amount = cost.baseAmount * Math.pow(cost.scalingFactor!, purchaseCount)
+      costs.set(cost.resourceId, amount)
+    }
+    return costs
+  }
+
+  purchase(resources: Map<string, Resource>, quantity: number = 1): { success: boolean; costs: Map<string, number> } {
+    if (!this.canPurchase(resources, quantity)) {
+      return { success: false, costs: new Map() }
     }
 
-    const costs = this.getCurrentCosts()
-    for (const [resourceId, amount] of costs) {
+    // Calculate and deduct total cost
+    let totalCost = new Map<string, number>()
+    
+    for (let i = 0; i < quantity; i++) {
+      const costs = this.getCurrentCostsForPurchase(this.purchased + i)
+      for (const [resourceId, amount] of costs) {
+        totalCost.set(resourceId, (totalCost.get(resourceId) || 0) + amount)
+      }
+    }
+
+    for (const [resourceId, amount] of totalCost) {
       const resource = resources.get(resourceId)
       resource?.subtract(amount)
     }
 
-    this.purchased++
-    return true
+    this.purchased += quantity
+    return { success: true, costs: totalCost }
+  }
+
+  getMaxAffordable(resources: Map<string, Resource>): number {
+    const maxCheck = this.maxPurchases !== null 
+      ? this.maxPurchases - this.purchased 
+      : 1000
+
+    // Binary search for maximum affordable quantity
+    let left = 0
+    let right = maxCheck
+    let result = 0
+    
+    while (left <= right) {
+      const mid = Math.floor((left + right) / 2)
+      if (this.canPurchase(resources, mid)) {
+        result = mid
+        left = mid + 1
+      } else {
+        right = mid - 1
+      }
+    }
+    
+    return result
   }
 
   getCurrentProduction(): number {
-    return this.baseProductionRate * this.purchased
+    let production = this.baseProductionRate * this.purchased
+    
+    // Apply all active multipliers
+    for (const multiplier of this.productionMultipliers) {
+      if (multiplier.active) {
+        production = multiplier.apply(production)
+      }
+    }
+    
+    return production
   }
 
   toJSON() {
     return {
       id: this.id,
-      purchased: this.purchased
+      purchased: this.purchased,
+      multipliers: this.productionMultipliers.map(m => m.toJSON())
     }
   }
 
-  fromJSON(data: { purchased: number }): void {
+  fromJSON(data: { purchased: number; multipliers?: any[] }): void {
     this.purchased = data.purchased
+    // Note: Multipliers are re-applied by upgrade effects during load
+    // so we don't restore them directly here
   }
 }
