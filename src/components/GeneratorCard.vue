@@ -95,7 +95,7 @@ function handlePurchase(quantity: number = 1) {
     <div class="purchase-buttons" role="group" :aria-labelledby="`generator-${generator.id}-name`">
       <button 
         @click="handlePurchase(1)" 
-        :disabled="!canAfford || isMaxed"
+        :disabled="!canAfford || isMaxed || maxAffordable < 1"
         :aria-label="buyOneAriaLabel"
         class="purchase-button"
       >
@@ -121,7 +121,7 @@ function handlePurchase(quantity: number = 1) {
         Buy 100
       </button>
       <button 
-        v-if="maxAffordable > 1"
+        v-if="maxAffordable >= 1"
         @click="handlePurchase(maxAffordable)" 
         :disabled="maxAffordable < 1 || isMaxed"
         :aria-label="buyMaxAriaLabel"
