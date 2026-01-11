@@ -7,8 +7,11 @@ A modern, extensible framework for building idle/incremental games using Vue 3, 
 - **Core Game Systems**
   - Resource management with automatic formatting (K, M, B, T, etc.)
   - Generators with configurable costs and scaling
+  - **Bulk purchase support** (Buy 1, 10, 100, or max)
   - Upgrades with visibility conditions and effects
+  - **Multiplier system** for flexible production/cost modifications
   - Achievement system with secret achievements support
+  - **Statistics tracking** (total clicks, time played, resources earned, etc.)
   - Auto-save functionality
   - Offline progress calculation
 
@@ -17,12 +20,22 @@ A modern, extensible framework for building idle/incremental games using Vue 3, 
   - TypeScript for type safety
   - Pinia for state management
   - Vite for fast development
+  - ESLint + Prettier for code quality
+
+- **Accessibility Features**
+  - ARIA labels on all interactive elements
+  - Keyboard navigation support
+  - Screen reader announcements
+  - High contrast mode support
+  - Reduced motion support
+  - Focus management
 
 - **Ready-to-Use Components**
   - ResourceDisplay
-  - GeneratorCard
+  - GeneratorCard (with bulk purchase buttons)
   - UpgradeCard
   - AchievementCard
+  - StatisticsPanel
 
 ## Getting Started
 
@@ -44,6 +57,13 @@ npm run dev
 npm run build
 ```
 
+### Linting
+
+```bash
+npm run lint
+npm run format
+```
+
 ## Usage
 
 ### Creating a Game
@@ -51,7 +71,7 @@ npm run build
 Create a new game by instantiating the `GameEngine` and adding resources, generators, upgrades, and achievements:
 
 ```typescript
-import { GameEngine, Resource, Generator, Upgrade, Achievement } from './core'
+import { GameEngine, Resource, Generator, Upgrade, Achievement, Multiplier } from './core'
 
 function createMyGame(): GameEngine {
   const engine = new GameEngine({
@@ -80,14 +100,24 @@ function createMyGame(): GameEngine {
   })
   engine.addGenerator(miner)
 
-  // Add an upgrade
+  // Add a multiplier
+  const minerMultiplier = new Multiplier({
+    id: 'miner_boost',
+    name: 'Miner Production Boost',
+    description: 'Doubles miner production',
+    type: 'multiplicative',
+    value: 2,
+    target: 'miner'
+  })
+
+  // Add an upgrade that applies the multiplier
   const upgrade = new Upgrade({
     id: 'better_pickaxe',
     name: 'Better Pickaxe',
     description: 'Miners work twice as fast',
     costs: [{ resourceId: 'gold', amount: 100 }],
     effect: () => {
-      // Apply upgrade effect
+      miner.addMultiplier(minerMultiplier)
     }
   })
   engine.addUpgrade(upgrade)
@@ -135,7 +165,7 @@ onMounted(() => {
       :key="generator.id"
       :generator="generator"
       :resources="gameStore.resources"
-      @purchase="gameStore.purchaseGenerator"
+      @purchase="(id, qty) => gameStore.purchaseGenerator(id, qty)"
     />
   </div>
 </template>
@@ -155,12 +185,21 @@ Produces resources over time.
 - Multiple cost requirements
 - Exponential cost scaling
 - Optional purchase limits
+- **Bulk purchase support** (buy 1, 10, 100, or max)
+- **Multiplier support** for flexible production modifications
+
+### Multiplier
+Modifies production rates or other values.
+- Additive or multiplicative types
+- Can target specific generators
+- Stackable for complex effects
 
 ### Upgrade
 One-time or repeatable purchases that enhance gameplay.
 - Custom effects
 - Visibility conditions
 - Multi-purchase support
+- Can apply multipliers to generators
 
 ### Achievement
 Tracks player milestones.
@@ -168,12 +207,21 @@ Tracks player milestones.
 - Optional rewards
 - Secret achievements
 
+### Statistics
+Tracks player progress and statistics.
+- Total resources earned/spent
+- Total generators/upgrades purchased
+- Achievements unlocked
+- Time played
+- Total manual clicks
+
 ### GameEngine
 Orchestrates all game systems.
 - Manages game loop
 - Handles save/load
 - Calculates offline progress
 - Auto-save support
+- Integrated statistics tracking
 
 ## Example Game
 
