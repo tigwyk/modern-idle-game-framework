@@ -39,6 +39,10 @@ A modern, extensible framework for building idle/incremental games using Vue 3, 
 
 ## Getting Started
 
+### Quick Start for New Developers
+
+**New to the framework?** Check out our comprehensive [Getting Started Guide](./GETTING_STARTED.md) that walks you through creating your first idle game step-by-step!
+
 ### Installation
 
 ```bash
@@ -223,9 +227,33 @@ Orchestrates all game systems.
 - Auto-save support
 - Integrated statistics tracking
 
-## Example Game
+## Example Games
 
-The project includes a Cookie Clicker-style demo game showcasing all framework features. Check `src/games/cookieGame.ts` for implementation details.
+The framework includes two complete demo games to help you learn:
+
+### 1. Space Mining Empire (Default Demo)
+A comprehensive example featuring:
+- Multiple interconnected resources (minerals, credits, energy)
+- Strategic resource management and conversion chains
+- Progressive unlocking of technology tiers
+- 11 achievements including secret ones
+- 7 different types of generators
+- Both early and late-game upgrade paths
+
+**File**: `src/games/spaceMiningGame.ts`
+
+### 2. Cookie Clicker
+A classic incremental game implementation showing:
+- Simple single-resource gameplay
+- Progressive generator purchases
+- Multiplicative upgrade system
+- Achievement milestones
+
+**File**: `src/games/cookieGame.ts`
+
+Both games showcase different approaches to game design using the same framework. Use them as references when building your own game!
+
+To switch between games, edit `src/App.vue` and change the import/initialization.
 
 ## Project Structure
 

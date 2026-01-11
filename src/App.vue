@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted } from 'vue'
 import { useGameStore } from './stores/game'
-import { createCookieGame } from './games/cookieGame'
+import { createSpaceMiningGame } from './games/spaceMiningGame'
 import ResourceDisplay from './components/ResourceDisplay.vue'
 import GeneratorCard from './components/GeneratorCard.vue'
 import UpgradeCard from './components/UpgradeCard.vue'
@@ -11,7 +11,7 @@ import StatisticsPanel from './components/StatisticsPanel.vue'
 const gameStore = useGameStore()
 
 onMounted(() => {
-  const engine = createCookieGame()
+  const engine = createSpaceMiningGame()
   gameStore.initializeGame(engine)
   gameStore.loadGame()
   gameStore.startGame()
@@ -23,12 +23,12 @@ onUnmounted(() => {
 })
 
 function handleManualClick() {
-  const cookies = gameStore.getResource('cookies')
-  if (cookies) {
-    cookies.add(1)
+  const minerals = gameStore.getResource('minerals')
+  if (minerals) {
+    minerals.add(1)
     // Track the click and resource earned in statistics
     gameStore.engine?.statistics.recordClick()
-    gameStore.engine?.statistics.recordResourceEarned('cookies', 1)
+    gameStore.engine?.statistics.recordResourceEarned('minerals', 1)
   }
 }
 </script>
@@ -36,8 +36,8 @@ function handleManualClick() {
 <template>
   <div class="game-container">
     <header>
-      <h1>🍪 Cookie Clicker Demo</h1>
-      <p class="subtitle">Built with the Idle Game Framework</p>
+      <h1>🚀 Space Mining Empire</h1>
+      <p class="subtitle">Built with the Modern Idle Game Framework</p>
     </header>
 
     <div class="game-content">
@@ -49,8 +49,8 @@ function handleManualClick() {
             :key="resource.id"
             :resource="resource"
           />
-          <button @click="handleManualClick" class="click-button" aria-label="Click to bake one cookie">
-            🍪 Bake Cookie
+          <button @click="handleManualClick" class="click-button" aria-label="Click to mine minerals">
+            ⛏️ Mine Minerals
           </button>
         </section>
 
@@ -158,13 +158,14 @@ section h2 {
   width: 100%;
   padding: 2rem;
   font-size: 2rem;
-  background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   border: none;
   border-radius: 12px;
   cursor: pointer;
   transition: transform 0.1s, box-shadow 0.1s;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   margin-top: 1rem;
+  color: white;
 }
 
 .click-button:hover {
