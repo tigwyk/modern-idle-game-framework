@@ -61,7 +61,11 @@ export const useGameStore = defineStore('game', () => {
       engine.value.getAllResources().map(r => [r.id, r])
     )
 
-    return generator.purchase(resourceMap, quantity)
+    const success = generator.purchase(resourceMap, quantity)
+    if (success) {
+      engine.value.statistics.recordGeneratorPurchase(generatorId, quantity)
+    }
+    return success
   }
 
   function purchaseUpgrade(upgradeId: string): boolean {
@@ -74,7 +78,11 @@ export const useGameStore = defineStore('game', () => {
       engine.value.getAllResources().map(r => [r.id, r])
     )
 
-    return upgrade.purchase(resourceMap)
+    const success = upgrade.purchase(resourceMap)
+    if (success) {
+      engine.value.statistics.recordUpgradePurchase(upgradeId)
+    }
+    return success
   }
 
   function getResource(id: string) {

@@ -6,6 +6,7 @@ import ResourceDisplay from './components/ResourceDisplay.vue'
 import GeneratorCard from './components/GeneratorCard.vue'
 import UpgradeCard from './components/UpgradeCard.vue'
 import AchievementCard from './components/AchievementCard.vue'
+import StatisticsPanel from './components/StatisticsPanel.vue'
 
 const gameStore = useGameStore()
 
@@ -25,6 +26,9 @@ function handleManualClick() {
   const cookies = gameStore.getResource('cookies')
   if (cookies) {
     cookies.add(1)
+    // Track the click and resource earned in statistics
+    gameStore.engine?.statistics.recordClick()
+    gameStore.engine?.statistics.recordResourceEarned('cookies', 1)
   }
 }
 </script>
@@ -60,6 +64,11 @@ function handleManualClick() {
             />
           </div>
         </section>
+
+        <StatisticsPanel 
+          v-if="gameStore.engine?.statistics"
+          :statistics="gameStore.engine.statistics"
+        />
       </aside>
 
       <main class="main-content">

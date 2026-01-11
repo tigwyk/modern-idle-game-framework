@@ -2,6 +2,7 @@ import { Resource } from './Resource'
 import { Generator } from './Generator'
 import { Upgrade } from './Upgrade'
 import { Achievement } from './Achievement'
+import { StatisticsTracker } from './Statistics'
 
 export interface GameEngineConfig {
   tickRate?: number
@@ -13,6 +14,7 @@ export class GameEngine {
   private generators: Map<string, Generator> = new Map()
   private upgrades: Map<string, Upgrade> = new Map()
   private achievements: Map<string, Achievement> = new Map()
+  public statistics: StatisticsTracker
   
   private tickRate: number
   private autoSaveInterval: number
@@ -23,6 +25,7 @@ export class GameEngine {
   constructor(config: GameEngineConfig = {}) {
     this.tickRate = config.tickRate ?? 100 // 100ms = 10 ticks per second
     this.autoSaveInterval = config.autoSaveInterval ?? 30000 // 30 seconds
+    this.statistics = new StatisticsTracker()
   }
 
   // Resource management
@@ -107,12 +110,18 @@ export class GameEngine {
     for (const generator of this.generators.values()) {
       const production = generator.getCurrentProduction() * deltaTime
       const resource = this.resources.get(generator.producesResourceId)
-      resource?.add(production)
+      if (resource && production > 0) {
+        resource.add(production)
+        this.statistics.recordResourceEarned(generator.producesResourceId, production)
+      }
     }
 
     // Check achievements
     for (const achievement of this.achievements.values()) {
-      achievement.check()
+      const wasUnlocked = achievement.unlocked
+      if (achievement.check() && !wasUnlocked) {
+        this.statistics.recordAchievementUnlocked()
+      }
     }
 
     // Auto-save
@@ -124,11 +133,14 @@ export class GameEngine {
 
   // Save/Load
   save(): void {
+    this.statistics.updateTimePlayed()
+    
     const saveData = {
       resources: Array.from(this.resources.values()).map(r => r.toJSON()),
       generators: Array.from(this.generators.values()).map(g => g.toJSON()),
       upgrades: Array.from(this.upgrades.values()).map(u => u.toJSON()),
       achievements: Array.from(this.achievements.values()).map(a => a.toJSON()),
+      statistics: this.statistics.toJSON(),
       timestamp: Date.now()
     }
 
@@ -174,6 +186,11 @@ export class GameEngine {
         achievement?.fromJSON(achievementData)
       }
 
+      // Load statistics
+      if (saveData.statistics) {
+        this.statistics.fromJSON(saveData.statistics)
+      }
+
       // Process offline progress
       if (saveData.timestamp) {
         const offlineTime = (Date.now() - saveData.timestamp) / 1000 // seconds
@@ -196,7 +213,10 @@ export class GameEngine {
     for (const generator of this.generators.values()) {
       const production = generator.getCurrentProduction() * offlineTime
       const resource = this.resources.get(generator.producesResourceId)
-      resource?.add(production)
+      if (resource && production > 0) {
+        resource.add(production)
+        this.statistics.recordResourceEarned(generator.producesResourceId, production)
+      }
     }
   }
 
@@ -213,6 +233,7 @@ export class GameEngine {
     for (const achievement of this.achievements.values()) {
       achievement.fromJSON({ unlocked: false })
     }
+    this.statistics.reset()
     localStorage.removeItem('idleGameSave')
   }
 }
