@@ -1,16 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-
-interface Statistics {
-  totalResourcesEarned: Map<string, number>
-  totalResourcesSpent: Map<string, number>
-  totalGeneratorsPurchased: Map<string, number>
-  totalUpgradesPurchased: Map<string, number>
-  achievementsUnlocked: number
-  timePlayed: number
-  totalClicks: number
-  sessionStartTime: number
-}
+import type { Statistics } from '../core'
 
 interface StatisticsProps {
   statistics: {
