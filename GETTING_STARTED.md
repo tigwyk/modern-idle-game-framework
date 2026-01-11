@@ -163,9 +163,11 @@ src/
 
 Let's create a simple farming game step-by-step!
 
+> **💡 Complete Example**: You can find the full working code for this tutorial in `src/games/farmingGame.ts`
+
 ### Step 1: Create the Game File
 
-Create a new file: `src/games/farmingGame.ts`
+Create a new file: `src/games/myFarmingGame.ts` (or open `src/games/farmingGame.ts` to follow along)
 
 ```typescript
 import { GameEngine, Resource, Generator, Upgrade, Achievement, Multiplier } from '../core'

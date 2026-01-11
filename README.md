@@ -41,7 +41,10 @@ A modern, extensible framework for building idle/incremental games using Vue 3, 
 
 ### Quick Start for New Developers
 
-**New to the framework?** Check out our comprehensive [Getting Started Guide](./GETTING_STARTED.md) that walks you through creating your first idle game step-by-step!
+**New to the framework?** Check out our comprehensive guides:
+
+- **[Getting Started Guide](./GETTING_STARTED.md)** - Step-by-step tutorial for creating your first idle game
+- **[Developer Guide](./DEVELOPER_GUIDE.md)** - Framework architecture and advanced topics
 
 ### Installation
 
@@ -229,9 +232,9 @@ Orchestrates all game systems.
 
 ## Example Games
 
-The framework includes two complete demo games to help you learn:
+The framework includes three demo games at different complexity levels:
 
-### 1. Space Mining Empire (Default Demo)
+### 1. Space Mining Empire (Default Demo - Advanced)
 A comprehensive example featuring:
 - Multiple interconnected resources (minerals, credits, energy)
 - Strategic resource management and conversion chains
@@ -240,20 +243,37 @@ A comprehensive example featuring:
 - 7 different types of generators
 - Both early and late-game upgrade paths
 
-**File**: `src/games/spaceMiningGame.ts`
+**File**: `src/games/spaceMiningGame.ts`  
+**Complexity**: Advanced - Shows all framework features
 
-### 2. Cookie Clicker
+### 2. Farming Game (Beginner Tutorial)
+A minimal example perfect for learning:
+- 2 simple resources (wheat and gold)
+- 2 generators showing resource production
+- Basic upgrade system with multipliers
+- 4 achievements including a secret one
+- Clear comments explaining each step
+
+**File**: `src/games/farmingGame.ts`  
+**Complexity**: Beginner - Great starting point
+
+### 3. Cookie Clicker (Classic)
 A classic incremental game implementation showing:
 - Simple single-resource gameplay
 - Progressive generator purchases
 - Multiplicative upgrade system
 - Achievement milestones
 
-**File**: `src/games/cookieGame.ts`
+**File**: `src/games/cookieGame.ts`  
+**Complexity**: Intermediate - Traditional idle game mechanics
 
-Both games showcase different approaches to game design using the same framework. Use them as references when building your own game!
+All games showcase different approaches to game design using the same framework. Use them as references when building your own game!
 
-To switch between games, edit `src/App.vue` and change the import/initialization.
+**To switch between games**, edit `src/App.vue` and change the import/initialization:
+```typescript
+import { createSpaceMiningGame } from './games/spaceMiningGame'  // or farmingGame, cookieGame
+const engine = createSpaceMiningGame()  // Change this line
+```
 
 ## Project Structure
 
