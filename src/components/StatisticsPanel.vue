@@ -1,9 +1,20 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
+interface Statistics {
+  totalResourcesEarned: Map<string, number>
+  totalResourcesSpent: Map<string, number>
+  totalGeneratorsPurchased: Map<string, number>
+  totalUpgradesPurchased: Map<string, number>
+  achievementsUnlocked: number
+  timePlayed: number
+  totalClicks: number
+  sessionStartTime: number
+}
+
 interface StatisticsProps {
   statistics: {
-    getStats(): any
+    getStats(): Readonly<Statistics>
     getTimePlayed(): number
     getTotalGeneratorsPurchased(): number
     getTotalUpgradesPurchased(): number

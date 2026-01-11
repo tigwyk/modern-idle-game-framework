@@ -97,9 +97,9 @@ export class Generator {
     return costs
   }
 
-  purchase(resources: Map<string, Resource>, quantity: number = 1): boolean {
+  purchase(resources: Map<string, Resource>, quantity: number = 1): { success: boolean; costs: Map<string, number> } {
     if (!this.canPurchase(resources, quantity)) {
-      return false
+      return { success: false, costs: new Map() }
     }
 
     // Calculate and deduct total cost
@@ -118,7 +118,7 @@ export class Generator {
     }
 
     this.purchased += quantity
-    return true
+    return { success: true, costs: totalCost }
   }
 
   getMaxAffordable(resources: Map<string, Resource>): number {

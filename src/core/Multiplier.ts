@@ -12,7 +12,7 @@ export class Multiplier {
   public readonly name: string
   public readonly description: string
   public readonly type: 'additive' | 'multiplicative'
-  public value: number
+  private _value: number
   public readonly target?: string
   public active: boolean
 
@@ -21,9 +21,17 @@ export class Multiplier {
     this.name = config.name
     this.description = config.description || ''
     this.type = config.type
-    this.value = config.value
+    this._value = config.value
     this.target = config.target
     this.active = true
+  }
+
+  get value(): number {
+    return this._value
+  }
+
+  setValue(newValue: number): void {
+    this._value = newValue
   }
 
   apply(baseValue: number): number {
@@ -48,7 +56,7 @@ export class Multiplier {
 
   fromJSON(data: { value?: number; active?: boolean }): void {
     if (data.value !== undefined) {
-      this.value = data.value
+      this._value = data.value
     }
     if (data.active !== undefined) {
       this.active = data.active

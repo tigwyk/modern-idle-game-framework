@@ -68,6 +68,7 @@ export class StatisticsTracker {
     const now = Date.now()
     const sessionTime = (now - this.stats.sessionStartTime) / 1000
     this.stats.timePlayed += sessionTime
+    // Reset session start time to prevent duplicate counting
     this.stats.sessionStartTime = now
   }
 

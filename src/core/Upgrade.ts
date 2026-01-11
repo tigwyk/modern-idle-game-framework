@@ -50,9 +50,9 @@ export class Upgrade {
     return true
   }
 
-  purchase(resources: Map<string, Resource>): boolean {
+  purchase(resources: Map<string, Resource>): { success: boolean; costs: UpgradeCost[] } {
     if (!this.canPurchase(resources)) {
-      return false
+      return { success: false, costs: [] }
     }
 
     for (const cost of this.costs) {
@@ -62,7 +62,7 @@ export class Upgrade {
 
     this.purchased++
     this.effect()
-    return true
+    return { success: true, costs: this.costs }
   }
 
   isMaxed(): boolean {

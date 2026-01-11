@@ -39,6 +39,31 @@ const isMaxed = computed(() =>
   props.generator.purchased >= props.generator.maxPurchases
 )
 
+// Computed ARIA labels
+const ownedAriaLabel = computed(() => 
+  `Owned ${props.generator.purchased} ${props.generator.name}`
+)
+
+const productionAriaLabel = computed(() => 
+  `Producing ${props.generator.getCurrentProduction().toFixed(2)} per second`
+)
+
+const buyOneAriaLabel = computed(() => 
+  `Purchase one ${props.generator.name} for ${costs.value.map(c => c.amount + ' ' + c.resourceName).join(', ')}`
+)
+
+const buyTenAriaLabel = computed(() => 
+  `Purchase 10 ${props.generator.name}s`
+)
+
+const buyHundredAriaLabel = computed(() => 
+  `Purchase 100 ${props.generator.name}s`
+)
+
+const buyMaxAriaLabel = computed(() => 
+  `Purchase maximum ${maxAffordable.value} ${props.generator.name}s`
+)
+
 function handlePurchase(quantity: number = 1) {
   emit('purchase', props.generator.id, quantity)
 }
@@ -47,8 +72,8 @@ function handlePurchase(quantity: number = 1) {
 <template>
   <div class="generator-card" :class="{ disabled: !canAfford || isMaxed }">
     <div class="generator-header">
-      <h3 id="generator-{{ generator.id }}-name">{{ generator.name }}</h3>
-      <div class="generator-count" aria-label="`Owned ${generator.purchased} ${generator.name}`">
+      <h3 :id="`generator-${generator.id}-name`">{{ generator.name }}</h3>
+      <div class="generator-count" :aria-label="ownedAriaLabel">
         Owned: {{ generator.purchased }}
       </div>
     </div>
@@ -57,7 +82,7 @@ function handlePurchase(quantity: number = 1) {
       {{ generator.description }}
     </p>
 
-    <div class="generator-production" aria-label="`Producing ${generator.getCurrentProduction().toFixed(2)} per second`">
+    <div class="generator-production" :aria-label="productionAriaLabel">
       Production: {{ generator.getCurrentProduction().toFixed(2) }}/s
     </div>
 
@@ -71,7 +96,7 @@ function handlePurchase(quantity: number = 1) {
       <button 
         @click="handlePurchase(1)" 
         :disabled="!canAfford || isMaxed"
-        :aria-label="`Purchase one ${generator.name} for ${costs.map(c => c.amount + ' ' + c.resourceName).join(', ')}`"
+        :aria-label="buyOneAriaLabel"
         class="purchase-button"
       >
         <span v-if="isMaxed">Maxed</span>
@@ -81,7 +106,7 @@ function handlePurchase(quantity: number = 1) {
         v-if="maxAffordable >= 10"
         @click="handlePurchase(10)" 
         :disabled="maxAffordable < 10 || isMaxed"
-        :aria-label="`Purchase 10 ${generator.name}s`"
+        :aria-label="buyTenAriaLabel"
         class="purchase-button bulk"
       >
         Buy 10
@@ -90,7 +115,7 @@ function handlePurchase(quantity: number = 1) {
         v-if="maxAffordable >= 100"
         @click="handlePurchase(100)" 
         :disabled="maxAffordable < 100 || isMaxed"
-        :aria-label="`Purchase 100 ${generator.name}s`"
+        :aria-label="buyHundredAriaLabel"
         class="purchase-button bulk"
       >
         Buy 100
@@ -99,7 +124,7 @@ function handlePurchase(quantity: number = 1) {
         v-if="maxAffordable > 1"
         @click="handlePurchase(maxAffordable)" 
         :disabled="maxAffordable < 1 || isMaxed"
-        :aria-label="`Purchase maximum ${maxAffordable} ${generator.name}s`"
+        :aria-label="buyMaxAriaLabel"
         class="purchase-button max"
       >
         Buy Max ({{ maxAffordable }})
