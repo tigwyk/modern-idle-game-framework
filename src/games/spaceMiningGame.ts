@@ -2,33 +2,33 @@ import { GameEngine, Resource, Generator, Upgrade, Achievement, Multiplier } fro
 
 /**
  * Space Mining Game - A demo idle game showcasing the framework
- * 
+ *
  * This game demonstrates:
  * - Multiple interconnected resources
  * - Generators with different production mechanics
  * - Strategic upgrades with multipliers
  * - Progression through different tiers of technology
  * - Achievement system with secrets
- * 
+ *
  * Theme: Mine asteroids to collect minerals, refine them into credits,
  * and build an interstellar mining empire!
  */
 export function createSpaceMiningGame(): GameEngine {
   const engine = new GameEngine({
     tickRate: 100, // 100ms = 10 ticks per second
-    autoSaveInterval: 30000 // Auto-save every 30 seconds
+    autoSaveInterval: 30000, // Auto-save every 30 seconds
   })
 
   // ============================================================================
   // RESOURCES
   // ============================================================================
-  
+
   const minerals = new Resource({
     id: 'minerals',
     name: 'Minerals',
     description: 'Raw materials extracted from asteroids',
     initialAmount: 0,
-    displayPrecision: 0
+    displayPrecision: 0,
   })
 
   const credits = new Resource({
@@ -36,7 +36,7 @@ export function createSpaceMiningGame(): GameEngine {
     name: 'Credits',
     description: 'Galactic currency for trading',
     initialAmount: 0,
-    displayPrecision: 0
+    displayPrecision: 0,
   })
 
   const energy = new Resource({
@@ -44,7 +44,7 @@ export function createSpaceMiningGame(): GameEngine {
     name: 'Energy',
     description: 'Power for your mining operations',
     initialAmount: 100,
-    displayPrecision: 0
+    displayPrecision: 0,
   })
 
   engine.addResource(minerals)
@@ -61,7 +61,7 @@ export function createSpaceMiningGame(): GameEngine {
     description: 'Basic autonomous mining unit',
     producesResourceId: 'minerals',
     baseProductionRate: 0.5,
-    costs: [{ resourceId: 'credits', baseAmount: 10, scalingFactor: 1.15 }]
+    costs: [{ resourceId: 'credits', baseAmount: 10, scalingFactor: 1.15 }],
   })
 
   const asteroidMiner = new Generator({
@@ -72,8 +72,8 @@ export function createSpaceMiningGame(): GameEngine {
     baseProductionRate: 3,
     costs: [
       { resourceId: 'credits', baseAmount: 100, scalingFactor: 1.15 },
-      { resourceId: 'minerals', baseAmount: 50, scalingFactor: 1.1 }
-    ]
+      { resourceId: 'minerals', baseAmount: 50, scalingFactor: 1.1 },
+    ],
   })
 
   const miningStation = new Generator({
@@ -84,8 +84,8 @@ export function createSpaceMiningGame(): GameEngine {
     baseProductionRate: 20,
     costs: [
       { resourceId: 'credits', baseAmount: 1000, scalingFactor: 1.15 },
-      { resourceId: 'minerals', baseAmount: 500, scalingFactor: 1.1 }
-    ]
+      { resourceId: 'minerals', baseAmount: 500, scalingFactor: 1.1 },
+    ],
   })
 
   // Energy Generators
@@ -97,8 +97,8 @@ export function createSpaceMiningGame(): GameEngine {
     baseProductionRate: 1,
     costs: [
       { resourceId: 'credits', baseAmount: 50, scalingFactor: 1.12 },
-      { resourceId: 'minerals', baseAmount: 20, scalingFactor: 1.08 }
-    ]
+      { resourceId: 'minerals', baseAmount: 20, scalingFactor: 1.08 },
+    ],
   })
 
   const fusionReactor = new Generator({
@@ -109,8 +109,8 @@ export function createSpaceMiningGame(): GameEngine {
     baseProductionRate: 10,
     costs: [
       { resourceId: 'credits', baseAmount: 500, scalingFactor: 1.15 },
-      { resourceId: 'minerals', baseAmount: 300, scalingFactor: 1.1 }
-    ]
+      { resourceId: 'minerals', baseAmount: 300, scalingFactor: 1.1 },
+    ],
   })
 
   // Credit Generators (Refineries)
@@ -120,9 +120,7 @@ export function createSpaceMiningGame(): GameEngine {
     description: 'Processes minerals into credits',
     producesResourceId: 'credits',
     baseProductionRate: 1,
-    costs: [
-      { resourceId: 'minerals', baseAmount: 100, scalingFactor: 1.15 }
-    ]
+    costs: [{ resourceId: 'minerals', baseAmount: 100, scalingFactor: 1.15 }],
   })
 
   const advancedRefinery = new Generator({
@@ -133,8 +131,8 @@ export function createSpaceMiningGame(): GameEngine {
     baseProductionRate: 8,
     costs: [
       { resourceId: 'minerals', baseAmount: 1000, scalingFactor: 1.15 },
-      { resourceId: 'credits', baseAmount: 500, scalingFactor: 1.12 }
-    ]
+      { resourceId: 'credits', baseAmount: 500, scalingFactor: 1.12 },
+    ],
   })
 
   engine.addGenerator(miningDrone)
@@ -155,7 +153,7 @@ export function createSpaceMiningGame(): GameEngine {
     description: 'Improved drone AI increases mining speed',
     type: 'multiplicative',
     value: 2,
-    target: 'mining_drone'
+    target: 'mining_drone',
   })
 
   const minerPowerMultiplier = new Multiplier({
@@ -164,7 +162,7 @@ export function createSpaceMiningGame(): GameEngine {
     description: 'Enhanced drilling systems',
     type: 'multiplicative',
     value: 2,
-    target: 'asteroid_miner'
+    target: 'asteroid_miner',
   })
 
   const stationAutomationMultiplier = new Multiplier({
@@ -173,7 +171,7 @@ export function createSpaceMiningGame(): GameEngine {
     description: 'Automated systems increase efficiency',
     type: 'multiplicative',
     value: 3,
-    target: 'mining_station'
+    target: 'mining_station',
   })
 
   const refinerySpeedMultiplier = new Multiplier({
@@ -182,7 +180,7 @@ export function createSpaceMiningGame(): GameEngine {
     description: 'Faster processing technology',
     type: 'multiplicative',
     value: 2,
-    target: 'basic_refinery'
+    target: 'basic_refinery',
   })
 
   const energyEfficiencyMultiplier = new Multiplier({
@@ -191,7 +189,7 @@ export function createSpaceMiningGame(): GameEngine {
     description: 'All operations use less energy',
     type: 'multiplicative',
     value: 1.5,
-    target: 'solar_panel'
+    target: 'solar_panel',
   })
 
   // ============================================================================
@@ -207,7 +205,7 @@ export function createSpaceMiningGame(): GameEngine {
     effect: () => {
       miningDrone.addMultiplier(droneEfficiencyMultiplier)
     },
-    isVisible: () => miningDrone.purchased >= 1
+    isVisible: () => miningDrone.purchased >= 1,
   })
 
   const betterScanning = new Upgrade({
@@ -217,7 +215,7 @@ export function createSpaceMiningGame(): GameEngine {
     costs: [{ resourceId: 'credits', amount: 100 }],
     effect: () => {
       // This would affect manual harvesting in the UI
-    }
+    },
   })
 
   const heavyDutyDrills = new Upgrade({
@@ -228,7 +226,7 @@ export function createSpaceMiningGame(): GameEngine {
     effect: () => {
       asteroidMiner.addMultiplier(minerPowerMultiplier)
     },
-    isVisible: () => asteroidMiner.purchased >= 1
+    isVisible: () => asteroidMiner.purchased >= 1,
   })
 
   // Mid game upgrades
@@ -238,12 +236,12 @@ export function createSpaceMiningGame(): GameEngine {
     description: 'Mining stations triple their output',
     costs: [
       { resourceId: 'credits', amount: 5000 },
-      { resourceId: 'energy', amount: 100 }
+      { resourceId: 'energy', amount: 100 },
     ],
     effect: () => {
       miningStation.addMultiplier(stationAutomationMultiplier)
     },
-    isVisible: () => miningStation.purchased >= 1
+    isVisible: () => miningStation.purchased >= 1,
   })
 
   const quantumProcessing = new Upgrade({
@@ -252,12 +250,12 @@ export function createSpaceMiningGame(): GameEngine {
     description: 'Refineries work twice as fast',
     costs: [
       { resourceId: 'credits', amount: 2000 },
-      { resourceId: 'energy', amount: 50 }
+      { resourceId: 'energy', amount: 50 },
     ],
     effect: () => {
       basicRefinery.addMultiplier(refinerySpeedMultiplier)
     },
-    isVisible: () => basicRefinery.purchased >= 1
+    isVisible: () => basicRefinery.purchased >= 1,
   })
 
   const solarOptimization = new Upgrade({
@@ -266,12 +264,12 @@ export function createSpaceMiningGame(): GameEngine {
     description: 'Solar panels 50% more efficient',
     costs: [
       { resourceId: 'credits', amount: 300 },
-      { resourceId: 'minerals', amount: 150 }
+      { resourceId: 'minerals', amount: 150 },
     ],
     effect: () => {
       solarPanel.addMultiplier(energyEfficiencyMultiplier)
     },
-    isVisible: () => solarPanel.purchased >= 1
+    isVisible: () => solarPanel.purchased >= 1,
   })
 
   // Late game upgrades
@@ -281,7 +279,7 @@ export function createSpaceMiningGame(): GameEngine {
     description: 'All mining equipment works 25% faster',
     costs: [
       { resourceId: 'credits', amount: 50000 },
-      { resourceId: 'energy', amount: 500 }
+      { resourceId: 'energy', amount: 500 },
     ],
     effect: () => {
       const globalMiningMultiplier = new Multiplier({
@@ -289,7 +287,7 @@ export function createSpaceMiningGame(): GameEngine {
         name: 'Global Mining Boost',
         description: 'Mega drills enhance all mining',
         type: 'multiplicative',
-        value: 1.25
+        value: 1.25,
         // No target specified - applies manually to each generator
       })
       miningDrone.addMultiplier(globalMiningMultiplier)
@@ -299,7 +297,7 @@ export function createSpaceMiningGame(): GameEngine {
     isVisible: () => {
       const totalMiners = miningDrone.purchased + asteroidMiner.purchased + miningStation.purchased
       return totalMiners >= 50
-    }
+    },
   })
 
   engine.addUpgrade(improvedDrillBits)
@@ -318,28 +316,28 @@ export function createSpaceMiningGame(): GameEngine {
     id: 'first_minerals',
     name: 'First Strike',
     description: 'Collect your first minerals',
-    condition: () => minerals.amount >= 1
+    condition: () => minerals.amount >= 1,
   })
 
   const hundredMinerals = new Achievement({
     id: 'hundred_minerals',
     name: 'Mineral Collector',
     description: 'Collect 100 minerals',
-    condition: () => minerals.amount >= 100
+    condition: () => minerals.amount >= 100,
   })
 
   const firstDrone = new Achievement({
     id: 'first_drone',
     name: 'Automation Begins',
     description: 'Purchase your first mining drone',
-    condition: () => miningDrone.purchased >= 1
+    condition: () => miningDrone.purchased >= 1,
   })
 
   const firstRefinery = new Achievement({
     id: 'first_refinery',
     name: 'Industrial Revolution',
     description: 'Build your first refinery',
-    condition: () => basicRefinery.purchased >= 1
+    condition: () => basicRefinery.purchased >= 1,
   })
 
   const tenGenerators = new Achievement({
@@ -347,33 +345,37 @@ export function createSpaceMiningGame(): GameEngine {
     name: 'Mining Fleet',
     description: 'Own 10 generators total',
     condition: () => {
-      const total = miningDrone.purchased + asteroidMiner.purchased + 
-                    miningStation.purchased + solarPanel.purchased + 
-                    fusionReactor.purchased + basicRefinery.purchased + 
-                    advancedRefinery.purchased
+      const total =
+        miningDrone.purchased +
+        asteroidMiner.purchased +
+        miningStation.purchased +
+        solarPanel.purchased +
+        fusionReactor.purchased +
+        basicRefinery.purchased +
+        advancedRefinery.purchased
       return total >= 10
-    }
+    },
   })
 
   const thousandCredits = new Achievement({
     id: 'thousand_credits',
     name: 'Galactic Entrepreneur',
     description: 'Accumulate 1,000 credits',
-    condition: () => credits.amount >= 1000
+    condition: () => credits.amount >= 1000,
   })
 
   const fiveUpgrades = new Achievement({
     id: 'five_upgrades',
     name: 'Tech Enthusiast',
     description: 'Purchase 5 different upgrades',
-    condition: () => engine.getAllUpgrades().filter(u => u.purchased > 0).length >= 5
+    condition: () => engine.getAllUpgrades().filter(u => u.purchased > 0).length >= 5,
   })
 
   const hundredEnergy = new Achievement({
     id: 'hundred_energy',
     name: 'Power Grid',
     description: 'Have 100 energy stored',
-    condition: () => energy.amount >= 100
+    condition: () => energy.amount >= 100,
   })
 
   // Secret achievements
@@ -382,7 +384,7 @@ export function createSpaceMiningGame(): GameEngine {
     name: 'Space Tycoon',
     description: 'Accumulate 100,000 credits',
     condition: () => credits.amount >= 100000,
-    isSecret: true
+    isSecret: true,
   })
 
   const secretMassProduction = new Achievement({
@@ -390,13 +392,17 @@ export function createSpaceMiningGame(): GameEngine {
     name: 'Industrial Complex',
     description: 'Own 50 generators of any type',
     condition: () => {
-      const total = miningDrone.purchased + asteroidMiner.purchased + 
-                    miningStation.purchased + solarPanel.purchased + 
-                    fusionReactor.purchased + basicRefinery.purchased + 
-                    advancedRefinery.purchased
+      const total =
+        miningDrone.purchased +
+        asteroidMiner.purchased +
+        miningStation.purchased +
+        solarPanel.purchased +
+        fusionReactor.purchased +
+        basicRefinery.purchased +
+        advancedRefinery.purchased
       return total >= 50
     },
-    isSecret: true
+    isSecret: true,
   })
 
   const secretAllUpgrades = new Achievement({
@@ -407,7 +413,7 @@ export function createSpaceMiningGame(): GameEngine {
       const upgrades = engine.getAllUpgrades()
       return upgrades.every(u => u.purchased > 0)
     },
-    isSecret: true
+    isSecret: true,
   })
 
   engine.addAchievement(firstMinerals)

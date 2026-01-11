@@ -2,20 +2,20 @@ import { GameEngine, Resource, Generator, Upgrade, Achievement, Multiplier } fro
 
 /**
  * Simple Farming Game - A minimal example for learning the framework
- * 
+ *
  * This is a beginner-friendly example showing the basics:
  * - 2 resources (Wheat and Gold)
  * - 2 generators (Farmer and Windmill)
  * - 1 upgrade with a multiplier
  * - 3 achievements
- * 
+ *
  * Use this as a starting point for your own game!
  */
 export function createFarmingGame(): GameEngine {
   // Step 1: Create the game engine
   const engine = new GameEngine({
-    tickRate: 100,        // Update 10 times per second
-    autoSaveInterval: 30000  // Save every 30 seconds
+    tickRate: 100, // Update 10 times per second
+    autoSaveInterval: 30000, // Save every 30 seconds
   })
 
   // Step 2: Define resources
@@ -24,15 +24,15 @@ export function createFarmingGame(): GameEngine {
     name: 'Wheat',
     description: 'Golden grain from your fields',
     initialAmount: 0,
-    displayPrecision: 0  // Show as whole numbers
+    displayPrecision: 0, // Show as whole numbers
   })
 
   const gold = new Resource({
     id: 'gold',
     name: 'Gold Coins',
     description: 'Currency for purchasing upgrades',
-    initialAmount: 10,  // Start with 10 gold
-    displayPrecision: 0
+    initialAmount: 10, // Start with 10 gold
+    displayPrecision: 0,
   })
 
   engine.addResource(wheat)
@@ -44,12 +44,14 @@ export function createFarmingGame(): GameEngine {
     name: 'Farmer',
     description: 'A hardworking farmer who grows wheat',
     producesResourceId: 'wheat',
-    baseProductionRate: 1,  // Produces 1 wheat per second
-    costs: [{ 
-      resourceId: 'gold', 
-      baseAmount: 10,      // First farmer costs 10 gold
-      scalingFactor: 1.15  // Each farmer costs 15% more than the last
-    }]
+    baseProductionRate: 1, // Produces 1 wheat per second
+    costs: [
+      {
+        resourceId: 'gold',
+        baseAmount: 10, // First farmer costs 10 gold
+        scalingFactor: 1.15, // Each farmer costs 15% more than the last
+      },
+    ],
   })
 
   const windmill = new Generator({
@@ -57,12 +59,14 @@ export function createFarmingGame(): GameEngine {
     name: 'Windmill',
     description: 'Processes wheat into gold',
     producesResourceId: 'gold',
-    baseProductionRate: 0.5,  // Produces 0.5 gold per second
-    costs: [{ 
-      resourceId: 'wheat', 
-      baseAmount: 50, 
-      scalingFactor: 1.2  // Gets expensive faster
-    }]
+    baseProductionRate: 0.5, // Produces 0.5 gold per second
+    costs: [
+      {
+        resourceId: 'wheat',
+        baseAmount: 50,
+        scalingFactor: 1.2, // Gets expensive faster
+      },
+    ],
   })
 
   engine.addGenerator(farmer)
@@ -74,8 +78,8 @@ export function createFarmingGame(): GameEngine {
     name: 'Better Tools',
     description: 'Farmers work faster with better tools',
     type: 'multiplicative',
-    value: 2,           // Doubles production
-    target: 'farmer'    // Only affects farmers
+    value: 2, // Doubles production
+    target: 'farmer', // Only affects farmers
   })
 
   // Step 5: Create upgrades
@@ -88,7 +92,7 @@ export function createFarmingGame(): GameEngine {
       // Apply the multiplier to farmers
       farmer.addMultiplier(betterTools)
     },
-    isVisible: () => farmer.purchased >= 1  // Only show if you have a farmer
+    isVisible: () => farmer.purchased >= 1, // Only show if you have a farmer
   })
 
   const moreLand = new Upgrade({
@@ -99,7 +103,7 @@ export function createFarmingGame(): GameEngine {
     effect: () => {
       // This upgrade doesn't do much in this simple example
       // In a real game, you might unlock new features
-    }
+    },
   })
 
   engine.addUpgrade(toolUpgrade)
@@ -110,21 +114,21 @@ export function createFarmingGame(): GameEngine {
     id: 'first_wheat',
     name: 'First Harvest',
     description: 'Collect your first wheat',
-    condition: () => wheat.amount >= 1
+    condition: () => wheat.amount >= 1,
   })
 
   const firstFarmer = new Achievement({
     id: 'first_farmer',
     name: 'Growing Team',
     description: 'Hire your first farmer',
-    condition: () => farmer.purchased >= 1
+    condition: () => farmer.purchased >= 1,
   })
 
   const hundredWheat = new Achievement({
     id: 'hundred_wheat',
     name: 'Bountiful Harvest',
     description: 'Accumulate 100 wheat',
-    condition: () => wheat.amount >= 100
+    condition: () => wheat.amount >= 100,
   })
 
   const secretRich = new Achievement({
@@ -132,7 +136,7 @@ export function createFarmingGame(): GameEngine {
     name: 'Golden Touch',
     description: 'Accumulate 500 gold',
     condition: () => gold.amount >= 500,
-    isSecret: true  // Hidden until unlocked
+    isSecret: true, // Hidden until unlocked
   })
 
   engine.addAchievement(firstWheat)

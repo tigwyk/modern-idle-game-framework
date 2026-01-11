@@ -50,7 +50,7 @@ export class Multiplier {
     return {
       id: this.id,
       value: this.value,
-      active: this.active
+      active: this.active,
     }
   }
 

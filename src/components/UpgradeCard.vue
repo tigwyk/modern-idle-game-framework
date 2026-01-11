@@ -11,28 +11,25 @@ const emit = defineEmits<{
   purchase: [upgradeId: string]
 }>()
 
-const resourceMap = computed(() => 
-  new Map(props.resources.map(r => [r.id, r]))
-)
+const resourceMap = computed(() => new Map(props.resources.map(r => [r.id, r])))
 
-const canAfford = computed(() => 
-  props.upgrade.canPurchase(resourceMap.value)
-)
+const canAfford = computed(() => props.upgrade.canPurchase(resourceMap.value))
 
 const costs = computed(() => {
   return props.upgrade.costs.map(cost => {
     const resource = resourceMap.value.get(cost.resourceId)
     return {
       resourceName: resource?.name ?? cost.resourceId,
-      amount: cost.amount.toFixed(2)
+      amount: cost.amount.toFixed(2),
     }
   })
 })
 
 const isMaxed = computed(() => props.upgrade.isMaxed())
 
-const purchaseAriaLabel = computed(() => 
-  `Purchase ${props.upgrade.name} upgrade for ${costs.value.map(c => c.amount + ' ' + c.resourceName).join(', ')}`
+const purchaseAriaLabel = computed(
+  () =>
+    `Purchase ${props.upgrade.name} upgrade for ${costs.value.map(c => c.amount + ' ' + c.resourceName).join(', ')}`
 )
 
 function handlePurchase() {
@@ -48,7 +45,7 @@ function handlePurchase() {
         {{ upgrade.purchased }}/{{ upgrade.maxPurchases }}
       </div>
     </div>
-    
+
     <p class="upgrade-description">{{ upgrade.description }}</p>
 
     <div class="upgrade-costs" role="group" aria-label="Cost">
@@ -57,8 +54,8 @@ function handlePurchase() {
       </div>
     </div>
 
-    <button 
-      @click="handlePurchase" 
+    <button
+      @click="handlePurchase"
       :disabled="!canAfford || isMaxed"
       :aria-labelledby="`upgrade-${upgrade.id}-name`"
       :aria-label="purchaseAriaLabel"

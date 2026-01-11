@@ -49,13 +49,21 @@ function handleManualClick() {
             :key="resource.id"
             :resource="resource"
           />
-          <button @click="handleManualClick" class="click-button" aria-label="Click to mine minerals">
+          <button
+            @click="handleManualClick"
+            class="click-button"
+            aria-label="Click to mine minerals"
+          >
             ⛏️ Mine Minerals
           </button>
         </section>
 
         <section class="achievements-section">
-          <h2>Achievements ({{ gameStore.unlockedAchievements.length }}/{{ gameStore.achievements.length }})</h2>
+          <h2>
+            Achievements ({{ gameStore.unlockedAchievements.length }}/{{
+              gameStore.achievements.length
+            }})
+          </h2>
           <div class="achievements-list" role="list" aria-label="Achievements">
             <AchievementCard
               v-for="achievement in gameStore.achievements"
@@ -65,7 +73,7 @@ function handleManualClick() {
           </div>
         </section>
 
-        <StatisticsPanel 
+        <StatisticsPanel
           v-if="gameStore.engine?.statistics"
           :statistics="gameStore.engine.statistics"
         />
@@ -100,8 +108,16 @@ function handleManualClick() {
     </div>
 
     <footer>
-      <button @click="gameStore.saveGame()" class="action-button" aria-label="Save game progress">💾 Save Game</button>
-      <button @click="gameStore.resetGame()" class="action-button danger" aria-label="Reset game (warning: this will delete all progress)">🔄 Reset Game</button>
+      <button @click="gameStore.saveGame()" class="action-button" aria-label="Save game progress">
+        💾 Save Game
+      </button>
+      <button
+        @click="gameStore.resetGame()"
+        class="action-button danger"
+        aria-label="Reset game (warning: this will delete all progress)"
+      >
+        🔄 Reset Game
+      </button>
     </footer>
   </div>
 </template>
@@ -162,7 +178,9 @@ section h2 {
   border: none;
   border-radius: 12px;
   cursor: pointer;
-  transition: transform 0.1s, box-shadow 0.1s;
+  transition:
+    transform 0.1s,
+    box-shadow 0.1s;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   margin-top: 1rem;
   color: white;

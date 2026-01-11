@@ -95,10 +95,7 @@ export class StatisticsTracker {
   }
 
   getTotalUpgradesPurchased(): number {
-    return Array.from(this.stats.totalUpgradesPurchased.values()).reduce(
-      (sum, val) => sum + val,
-      0
-    )
+    return Array.from(this.stats.totalUpgradesPurchased.values()).reduce((sum, val) => sum + val, 0)
   }
 
   getTimePlayed(): number {

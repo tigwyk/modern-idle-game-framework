@@ -7,8 +7,8 @@ defineProps<{
 </script>
 
 <template>
-  <div 
-    class="achievement-card" 
+  <div
+    class="achievement-card"
     :class="{ unlocked: achievement.unlocked }"
     role="listitem"
     :aria-label="`${achievement.unlocked ? 'Unlocked' : 'Locked'} achievement: ${achievement.isSecret && !achievement.unlocked ? 'Secret Achievement' : achievement.name}`"
@@ -20,7 +20,9 @@ defineProps<{
     </div>
     <div class="achievement-content">
       <h4 class="achievement-name">
-        {{ achievement.isSecret && !achievement.unlocked ? 'Secret Achievement' : achievement.name }}
+        {{
+          achievement.isSecret && !achievement.unlocked ? 'Secret Achievement' : achievement.name
+        }}
       </h4>
       <p class="achievement-description">
         {{ achievement.isSecret && !achievement.unlocked ? '???' : achievement.description }}
