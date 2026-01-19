@@ -112,7 +112,7 @@ button:focus-visible {
   button {
     border: 2px solid currentColor;
   }
-  
+
   .generator-card,
   .upgrade-card,
   .achievement-card {

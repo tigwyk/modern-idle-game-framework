@@ -7,9 +7,9 @@ defineProps<{
 </script>
 
 <template>
-  <div 
-    class="resource-display" 
-    role="status" 
+  <div
+    class="resource-display"
+    role="status"
     aria-live="polite"
     :aria-label="`${resource.name}: ${resource.getDisplayAmount()}`"
   >
